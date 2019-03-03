@@ -13,11 +13,13 @@ export default class Input extends Component {
     return (
       <View style={styles.container}>
         <TextInput
+        value={this.props.title}
           placeholder='Title'
           style={styles.input}
           onChangeText={(title) => this.props.onChangeTitle(title)}
         />
         <DatePicker
+        date={this.props.date}
           mode={"datetime"}
           placeholder="Date"
           format="YYYY-MM-DD HH:mm"

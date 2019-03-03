@@ -3,7 +3,8 @@ import {
   Text,
   View,
   StyleSheet,
-  ListView
+  ListView,
+  AsyncStorage
 } from 'react-native';
 import Navbar from './Navbar';
 import Input from './Input';
@@ -27,11 +28,23 @@ export default class Index extends Component {
     this.onChangeDate = this.onChangeDate.bind(this);
   }
 
+  componentWillMount() {
+    AsyncStorage.getItem('items').then((json) => {
+      try {
+        const items = JSON.parse(json);
+        this.handleState(items, items);
+      } catch (err) {
+        console.log(err);
+      }
+    })
+  }
+
   handleState(items, dataSource) {
     this.setState({
       items,
       dataSource: this.state.dataSource.cloneWithRows(dataSource)
-     })
+     });
+     AsyncStorage.setItem('items', JSON.stringify(items))
   }
 
   handleAddItems() {
@@ -66,6 +79,8 @@ export default class Index extends Component {
           onChangeTitle={this.onChangeTitle}
           onChangeDate={this.onChangeDate}
           onHandleItems={this.handleAddItems}
+          date={this.state.date}
+          title={this.state.title}
         />
         <Items
           dataSource={this.state.dataSource}
