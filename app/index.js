@@ -22,6 +22,7 @@ export default class Index extends Component {
       title: '',
       date: ''
     }
+    this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleState = this.handleState.bind(this);
     this.handleAddItems = this.handleAddItems.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
@@ -39,10 +40,11 @@ export default class Index extends Component {
     })
   }
 
-  handleState(items, dataSource) {
+  handleState(items, dataSource, obj = {}) {
     this.setState({
       items,
-      dataSource: this.state.dataSource.cloneWithRows(dataSource)
+      dataSource: this.state.dataSource.cloneWithRows(dataSource),
+      ...obj
      });
      AsyncStorage.setItem('items', JSON.stringify(items))
   }
@@ -58,6 +60,13 @@ export default class Index extends Component {
         notification: false
       }
     ];
+    this.handleState(newItems, newItems, { title: '', date: '' });
+  }
+
+  handleRemoveItem(key) {
+    const newItems = this.state.items.filter(item => {
+      return item.key !== key;
+    });
     this.handleState(newItems, newItems);
   }
 
@@ -84,6 +93,7 @@ export default class Index extends Component {
         />
         <Items
           dataSource={this.state.dataSource}
+          removeItems={this.handleRemoveItem}
         />
       </View>
     );

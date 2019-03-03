@@ -3,7 +3,8 @@ import {
   Text,
   View,
   StyleSheet,
-  ListView
+  ListView,
+  TouchableOpacity
 } from 'react-native';
 
 export default class Items extends Component {
@@ -19,6 +20,9 @@ export default class Items extends Component {
               <View>
                 <Text>{value.title}</Text>
                 <Text>{value.date}</Text>
+                <TouchableOpacity onPress={() => this.props.removeItems(key)}>
+                  <Text>Delete</Text>
+                </TouchableOpacity>
               </View>
             );
           }}
