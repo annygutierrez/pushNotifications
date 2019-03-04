@@ -7,15 +7,21 @@ import {
 } from 'react-native';
 
 export default class Navbar extends Component {
+
+  componentDidMount() {
+    console.log(this.props);
+  }
+
   render() {
     return (
       <View style={styles.content}>
+        <Text style={styles.textCenter}>Remember me</Text>
         <TouchableOpacity
+          onPress={this.props.openModal}
           style={styles.containerButton}
         >
           <Text>New</Text>
         </TouchableOpacity>
-        <Text style={styles.textCenter}>Remember me</Text>
       </View>
     );
   }

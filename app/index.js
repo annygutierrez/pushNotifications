@@ -10,6 +10,20 @@ import Navbar from './Navbar';
 import Input from './Input';
 import Items from './Items';
 
+import PushNotification from 'react-native-push-notification';
+import moment from 'moment';
+
+PushNotification.configure({
+  onRegister: function(token) {
+    console.log('Token:', token)
+  },
+  onNotification: function(notification) {
+    console.log('Notification:', notification)
+  },
+  permissions: { alert: true, badge: true, sound: true },
+  popInitialNotification: true,
+  requestPermissions: true
+})
 export default class Index extends Component {
   constructor(props) {
     super(props);
@@ -20,8 +34,11 @@ export default class Index extends Component {
       dataSource: ds.cloneWithRows([]),
       items: [],
       title: '',
-      date: ''
+      date: '',
+      isVisible: false
     }
+    this.handleModalHide = this.handleModalHide.bind(this);
+    this.handleModalShow = this.handleModalShow.bind(this);
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleState = this.handleState.bind(this);
     this.handleAddItems = this.handleAddItems.bind(this);
@@ -38,6 +55,18 @@ export default class Index extends Component {
         console.log(err);
       }
     })
+  }
+
+  handleNotifications(value, key) {
+  }
+
+  handleModalShow() {
+    console.log('show modal se ejecuto');
+    this.setState({ isVisible: true })
+  }
+
+  handleModalHide() {
+    this.setState({ isVisible: false })
   }
 
   handleState(items, dataSource, obj = {}) {
@@ -60,6 +89,7 @@ export default class Index extends Component {
         notification: false
       }
     ];
+    this.handleModalHide();
     this.handleState(newItems, newItems, { title: '', date: '' });
   }
 
@@ -82,7 +112,7 @@ export default class Index extends Component {
     return (
       <View style={styles.container}>
         <Navbar
-          
+          openModal={this.handleModalShow}
         />
         <Input
           onChangeTitle={this.onChangeTitle}
@@ -90,6 +120,8 @@ export default class Index extends Component {
           onHandleItems={this.handleAddItems}
           date={this.state.date}
           title={this.state.title}
+          isVisible={this.state.isVisible}
+          onCloseModal={this.handleModalHide}
         />
         <Items
           dataSource={this.state.dataSource}

@@ -6,6 +6,7 @@ import {
   ListView,
   TouchableOpacity
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class Items extends Component {
   render() {
@@ -16,12 +17,37 @@ export default class Items extends Component {
           enableEmptySections
           dataSource={this.props.dataSource}
           renderRow={({ key, ...value }) => {
+            const activate = (
+              <TouchableOpacity>
+                <Icon
+                  name="bell-o"
+                  size={20}
+                  color={'#000'}
+                />
+              </TouchableOpacity>
+            );
+            const desactivate = (
+              <TouchableOpacity>
+                <Icon
+                  name="bell-slash-o"
+                  size={20}
+                  color="#000"
+                />
+              </TouchableOpacity>
+            );
+            const deleteRow = (
+              <Icon
+                name="times-circle"
+                size={20}
+                color="red"
+              />
+            );
             return (
-              <View>
+              <View style={styles.row}>
                 <Text>{value.title}</Text>
                 <Text>{value.date}</Text>
                 <TouchableOpacity onPress={() => this.props.removeItems(key)}>
-                  <Text>Delete</Text>
+                  {deleteRow}
                 </TouchableOpacity>
               </View>
             );
@@ -33,5 +59,18 @@ export default class Items extends Component {
 }
 
 const styles = StyleSheet.create({
-
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    backgroundColor: '#fff',
+    marginBottom: 5,
+    marginHorizontal: 5,
+    paddingHorizontal: 5,
+    borderRadius: 4
+  },
+  list: {
+    marginTop: 5
+  }
 });
