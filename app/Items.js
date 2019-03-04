@@ -18,7 +18,7 @@ export default class Items extends Component {
           dataSource={this.props.dataSource}
           renderRow={({ key, ...value }) => {
             const activate = (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => this.props.handleNotifications(value, key)}>
                 <Icon
                   name="bell-o"
                   size={20}
@@ -27,7 +27,7 @@ export default class Items extends Component {
               </TouchableOpacity>
             );
             const desactivate = (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => this.props.handleRemoveNotifications(key)}>
                 <Icon
                   name="bell-slash-o"
                   size={20}
@@ -49,6 +49,7 @@ export default class Items extends Component {
                 <TouchableOpacity onPress={() => this.props.removeItems(key)}>
                   {deleteRow}
                 </TouchableOpacity>
+                {/* {value.notification ? desactivate : activate} */}
               </View>
             );
           }}

@@ -37,6 +37,9 @@ export default class Index extends Component {
       date: '',
       isVisible: false
     }
+    this.handleToggleNotifications = this.handleRemoveNotifications.bind(this);
+    this.handleRemoveNotifications = this.handleRemoveNotifications.bind(this);
+    this.handleNotifications = this.handleNotifications.bind(this);
     this.handleModalHide = this.handleModalHide.bind(this);
     this.handleModalShow = this.handleModalShow.bind(this);
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
@@ -57,7 +60,29 @@ export default class Index extends Component {
     })
   }
 
+  handleRemoveNotifications(key) {
+    PushNotification.cancelLocalNotifications({ id: key });
+    this.handleToggleNotifications(key, false);
+  }
+
+  handleToggleNotifications(key, notification) {
+    const newItems = this.state.items.map(item => {
+      if(item.key !== key) return item;
+      return {
+        ...item,
+        notification
+      }
+    });
+    this.handleState(newItems, newItems);
+  }
+
   handleNotifications(value, key) {
+    PushNotification.localNotificationSchedule({
+      userInfo: { id: key },
+      message: value.title,
+      date: moment(value.date, "YYYY-MM-DD HH:mm").toDate()
+    });
+    this.handleToggleNotifications(key, true);
   }
 
   handleModalShow() {
@@ -97,6 +122,8 @@ export default class Index extends Component {
     const newItems = this.state.items.filter(item => {
       return item.key !== key;
     });
+    this.handleRemoveNotifications(key);
+    this.handleToggleNotifications(key, false);
     this.handleState(newItems, newItems);
   }
 
@@ -126,6 +153,8 @@ export default class Index extends Component {
         <Items
           dataSource={this.state.dataSource}
           removeItems={this.handleRemoveItem}
+          handleRemoveNotifications={this.handleRemoveNotifications}
+          handleNotifications={this.handleNotifications}
         />
       </View>
     );
